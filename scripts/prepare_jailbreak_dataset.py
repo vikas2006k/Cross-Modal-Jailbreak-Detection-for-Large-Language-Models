@@ -107,20 +107,26 @@ def classify_attack_type(prompt_text, source):
 
 def load_source_csvs(folder_path, source_name):
     """
-    Read all CSV files from a directory and return a standardized list of dicts.
+    Read all CSV and Parquet files from a directory and return a standardized list of dicts.
     """
     samples = []
     if not os.path.exists(folder_path):
         return samples, 0
 
-    csv_files = glob.glob(os.path.join(folder_path, "*.csv"))
+    files = glob.glob(os.path.join(folder_path, "*.csv")) + glob.glob(os.path.join(folder_path, "*.parquet"))
     total_raw_count = 0
 
-    for fpath in csv_files:
+    for fpath in files:
         try:
-            df = pd.read_csv(fpath, encoding="utf-8", on_bad_lines="skip")
-        except UnicodeDecodeError:
-            df = pd.read_csv(fpath, encoding="latin-1", on_bad_lines="skip")
+            if fpath.endswith(".parquet"):
+                df = pd.read_parquet(fpath)
+            else:
+                df = pd.read_csv(fpath, encoding="utf-8", on_bad_lines="skip")
+        except Exception:
+            try:
+                df = pd.read_csv(fpath, encoding="latin-1", on_bad_lines="skip")
+            except Exception:
+                continue
 
         if df.empty:
             continue
@@ -140,21 +146,24 @@ def load_source_csvs(folder_path, source_name):
 def prepare_jailbreak_dataset():
     advbench_dir = "dataset/external/advbench"
     prompt_inj_dir = "dataset/external/prompt_injection"
+    jailbreakbench_dir = "dataset/external/jailbreakbench"
     out_clean_path = "dataset/processed/jailbreak_prompts_clean.csv"
     out_train_path = "dataset/text/jailbreak/jailbreak_prompts.csv"
 
     # 1. Read datasets
     advbench_samples, advbench_raw_count = load_source_csvs(advbench_dir, "advbench")
     prompt_inj_samples, prompt_inj_raw_count = load_source_csvs(prompt_inj_dir, "prompt_injection")
+    jb_samples, jb_raw_count = load_source_csvs(jailbreakbench_dir, "jailbreakbench")
 
-    total_read = advbench_raw_count + prompt_inj_raw_count
-    all_samples = advbench_samples + prompt_inj_samples
+    total_read = advbench_raw_count + prompt_inj_raw_count + jb_raw_count
+    all_samples = advbench_samples + prompt_inj_samples + jb_samples
 
     print("==================================================")
     print("      Phase 1.3: Jailbreak Dataset Preparation    ")
     print("==================================================")
     print(f"Number of prompts read from AdvBench:          {advbench_raw_count}")
     print(f"Number of prompts read from Prompt Injection:  {prompt_inj_raw_count}")
+    print(f"Number of prompts read from JailbreakBench:    {jb_raw_count}")
     print(f"Total raw prompts read:                        {total_read}")
 
     if len(all_samples) == 0:

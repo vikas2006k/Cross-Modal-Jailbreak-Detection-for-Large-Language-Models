@@ -1,0 +1,37 @@
+{
+  "dataset_name": "CMJD-10K",
+  "version": "1.0",
+  "safe_samples": 5000,
+  "jailbreak_samples": 5000,
+  "train_samples": 7000,
+  "validation_samples": 1500,
+  "test_samples": 1500,
+  "attack_categories": [
+    "developer_mode",
+    "encoded_attack",
+    "indirect_injection",
+    "multi_turn_jailbreak",
+    "policy_bypass",
+    "prompt_injection",
+    "reasoning_manipulation",
+    "role_override",
+    "safe",
+    "system_prompt_extraction",
+    "tool_injection",
+    "unknown"
+  ],
+  "category_distribution": {
+    "safe": 5000,
+    "policy_bypass": 1435,
+    "unknown": 666,
+    "role_override": 531,
+    "prompt_injection": 447,
+    "developer_mode": 314,
+    "tool_injection": 304,
+    "system_prompt_extraction": 302,
+    "indirect_injection": 300,
+    "multi_turn_jailbreak": 250,
+    "encoded_attack": 250,
+    "reasoning_manipulation": 201
+  }
+}

@@ -88,11 +88,15 @@ Modern multi-modal AI systems accept diverse input modalities: free-form text, r
 CrossModal-Jailbreak-Detection/
 ├── backend/                  # FastAPI service, fusion engine, risk scoring, XAI
 ├── frontend/                 # React UI dashboard for monitoring and scanning
-├── data/                     # CMJD-30K dataset structure
-│   ├── annotations/          # Ground truth labels & splits
-│   ├── external/             # Base datasets (AdvBench, Alpaca, etc.)
-│   ├── raw/                  # Raw multimodal samples (images, PDFs, QRs)
-│   └── processed/            # Extracted features, embeddings, OCR text
+├── dataset/                  # CMJD-30K multimodal dataset structure
+│   ├── text/                 # Safe & jailbreak text prompts
+│   ├── images/               # Safe & jailbreak images (typographic/adversarial)
+│   ├── screenshots/          # Safe & jailbreak screen UI captures
+│   ├── qr_codes/             # Safe & jailbreak encoded QR matrices
+│   ├── pdfs/                 # Safe & jailbreak document payloads
+│   ├── annotations/          # Train, val, test JSON splits & summary
+│   ├── labels.csv            # Master CSV catalog
+│   └── metadata.csv          # Threat domains & model targets
 ├── models/                   # Model architectures and saved checkpoints
 │   ├── text_detector/        # DistilBERT classifier
 │   └── image_detector/       # CLIP visual classifier

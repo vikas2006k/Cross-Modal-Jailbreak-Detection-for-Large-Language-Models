@@ -1,0 +1,37 @@
+{
+  "dataset_name": "CMJD-30K",
+  "version": "1.0",
+  "total_target_samples": 30000,
+  "modalities": {
+    "text": {
+      "safe_dir": "dataset/text/safe/",
+      "jailbreak_dir": "dataset/text/jailbreak/",
+      "target_count": 15000
+    },
+    "images": {
+      "safe_dir": "dataset/images/safe/",
+      "jailbreak_dir": "dataset/images/jailbreak/",
+      "target_count": 5000
+    },
+    "screenshots": {
+      "safe_dir": "dataset/screenshots/safe/",
+      "jailbreak_dir": "dataset/screenshots/jailbreak/",
+      "target_count": 2000
+    },
+    "qr_codes": {
+      "safe_dir": "dataset/qr_codes/safe/",
+      "jailbreak_dir": "dataset/qr_codes/jailbreak/",
+      "target_count": 4000
+    },
+    "pdfs": {
+      "safe_dir": "dataset/pdfs/safe/",
+      "jailbreak_dir": "dataset/pdfs/jailbreak/",
+      "target_count": 4000
+    }
+  },
+  "splits": {
+    "train_ratio": 0.70,
+    "val_ratio": 0.15,
+    "test_ratio": 0.15
+  }
+}
