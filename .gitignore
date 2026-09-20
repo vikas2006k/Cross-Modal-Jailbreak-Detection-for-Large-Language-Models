@@ -39,9 +39,10 @@ venv.bak/
 *.bin
 *.safetensors
 *.onnx
-models/**/saved_model/
-models/**/checkpoints/
-models/**/best_model/
+models/**/saved_model/*
+models/**/checkpoints/*
+models/**/best_model/*
+models/**/logs/*
 !models/**/.gitkeep
 
 # Raw downloaded external datasets
