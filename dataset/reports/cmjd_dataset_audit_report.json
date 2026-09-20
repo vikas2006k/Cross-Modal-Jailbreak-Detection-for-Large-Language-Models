@@ -1,0 +1,52 @@
+{
+  "audit_timestamp": "2026-09-20T08:03:36Z",
+  "benchmark_version": "1.0",
+  "overall_status": "PASS",
+  "text_audit": {
+    "total_prompts": 10000,
+    "safe_prompts": 5000,
+    "jailbreak_prompts": 5000,
+    "empty_prompts": 0,
+    "duplicate_prompts": 0,
+    "length_range": "15-498",
+    "status": "PASS"
+  },
+  "safe_image_audit": {
+    "total_safe_images": 2500,
+    "metadata_rows": 2500,
+    "coco_count": 1500,
+    "flickr30k_count": 1000,
+    "duplicate_filenames": 0,
+    "status": "PASS"
+  },
+  "jailbreak_image_audit": {
+    "total_jailbreak_images": 2500,
+    "category_distribution": {
+      "hidden_prompt": 350,
+      "tiny_font": 350,
+      "low_contrast": 300,
+      "overlay_prompt": 350,
+      "meme_attack": 300,
+      "qr_overlay": 300,
+      "rotated_text": 250,
+      "watermark_prompt": 300
+    },
+    "master_rows": 2500,
+    "duplicate_source_images": 0,
+    "missing_files": 0,
+    "status": "PASS"
+  },
+  "splits_audit": {
+    "train": 7000,
+    "val": 1500,
+    "test": 1500,
+    "split_overlap": 0,
+    "status": "PASS"
+  },
+  "image_integrity_audit": {
+    "total_scanned": 5000,
+    "corrupted": 0,
+    "zero_byte": 0,
+    "status": "PASS"
+  }
+}

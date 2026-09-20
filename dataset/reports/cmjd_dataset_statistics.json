@@ -1,0 +1,83 @@
+{
+  "total_benchmark_samples": 22000,
+  "safe_samples": 11000,
+  "jailbreak_samples": 11000,
+  "modalities": [
+    "text",
+    "image",
+    "multimodal_cross_modal"
+  ],
+  "modality_breakdown": {
+    "pure_text_prompts": 10000,
+    "raw_and_adversarial_images": 5000,
+    "cross_modal_combinations": 7000
+  },
+  "text_statistics": {
+    "total_prompts": 10000,
+    "safe_prompts": 5000,
+    "jailbreak_prompts": 5000,
+    "prompt_length": {
+      "min": 15,
+      "max": 498,
+      "mean": 112.44,
+      "median": 90.0
+    },
+    "attack_type_distribution": {
+      "safe": 5000,
+      "policy_bypass": 1435,
+      "unknown": 666,
+      "role_override": 531,
+      "prompt_injection": 447,
+      "developer_mode": 314,
+      "tool_injection": 304,
+      "system_prompt_extraction": 302,
+      "indirect_injection": 300,
+      "multi_turn_jailbreak": 250,
+      "encoded_attack": 250,
+      "reasoning_manipulation": 201
+    }
+  },
+  "image_statistics": {
+    "total_images": 5000,
+    "safe_images": 2500,
+    "jailbreak_images": 2500,
+    "source_dataset_distribution": {
+      "coco": 1500,
+      "flickr30k": 1000
+    },
+    "jailbreak_category_distribution": {
+      "hidden_prompt": 350,
+      "tiny_font": 350,
+      "low_contrast": 300,
+      "overlay_prompt": 350,
+      "meme_attack": 300,
+      "qr_overlay": 300,
+      "rotated_text": 250,
+      "watermark_prompt": 300
+    },
+    "folder_sizes_mb": {
+      "safe": 373.97,
+      "total_jailbreak": 288.16,
+      "by_category": {
+        "hidden_prompt": 40.47,
+        "tiny_font": 39.78,
+        "low_contrast": 34.52,
+        "overlay_prompt": 40.71,
+        "meme_attack": 34.92,
+        "qr_overlay": 35.15,
+        "rotated_text": 29.4,
+        "watermark_prompt": 33.21
+      }
+    }
+  },
+  "split_statistics": {
+    "train": 7000,
+    "validation": 1500,
+    "test": 1500,
+    "split_proportions": {
+      "train": "70%",
+      "validation": "15%",
+      "test": "15%"
+    }
+  }
+}

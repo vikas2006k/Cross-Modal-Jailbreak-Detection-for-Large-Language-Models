@@ -1,0 +1,59 @@
+================================================================================
+                    CMJD DATASET INTEGRITY REPORT v1.0
+================================================================================
+Audit Timestamp: 2026-09-20 08:03:36 UTC
+Benchmark Name:  Cross-Modal Jailbreak Detection for Large Language Models (CMJD)
+Dataset Version: v1.0
+
+[PART 1: TEXT INTEGRITY]
+  * Total prompts:              10000
+  * Safe prompts:               5000
+  * Jailbreak prompts:          5000
+  * Empty prompts:              0
+  * Duplicate prompts:          0
+  * Length bounds:              15 to 498 chars (Passed)
+  * Status:                     VERIFIED
+
+[PART 2: SAFE IMAGE INTEGRITY]
+  * Total safe images:          2500
+  * COCO 2017 count:            1500
+  * Flickr30k count:            1000
+  * Metadata rows:              2500
+  * Duplicate filenames:        0
+  * Status:                     VERIFIED
+
+[PART 3: JAILBREAK IMAGE INTEGRITY]
+  * Total jailbreak images:     2500
+  * Hidden prompt:              350
+  * Tiny font:                  350
+  * Low contrast:               300
+  * Overlay prompt:             350
+  * Meme attack:                300
+  * QR overlay:                 300
+  * Rotated text:               250
+  * Watermark prompt:           300
+  * Status:                     VERIFIED
+
+[PART 4: MASTER METADATA INTEGRITY]
+  * Master rows:                2500
+  * Sequential IDs:             1 to 2500 (Passed)
+  * Duplicate source images:    0
+  * Missing image files:        0
+  * Status:                     VERIFIED
+
+[PART 5: SPLITS INTEGRITY]
+  * Train samples:              7000
+  * Validation samples:         1500
+  * Test samples:               1500
+  * Overlap across splits:      0
+  * Status:                     VERIFIED
+
+[PART 6: IMAGE BYTE INTEGRITY]
+  * Total scanned JPEGs:        5000
+  * Corrupted JPEGs:            0
+  * Zero-byte files:            0
+  * Status:                     VERIFIED
+
+================================================================================
+FINAL VERDICT: ALL INTEGRITY CHECKS PASSED [STATUS: PASS]
+================================================================================

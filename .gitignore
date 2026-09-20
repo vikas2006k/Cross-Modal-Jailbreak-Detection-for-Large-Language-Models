@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / ambient files
 __pycache__/
 *.py[cod]
+*.pyc
 *$py.class
 *.so
 
@@ -38,26 +39,18 @@ venv.bak/
 *.bin
 *.safetensors
 *.onnx
-models/**/saved_model/*
-models/**/checkpoints/*
+models/**/saved_model/
+models/**/checkpoints/
+models/**/best_model/
 !models/**/.gitkeep
 
-# Datasets / Large media files (ignore heavy media while preserving subfolders and annotations)
+# Raw downloaded external datasets
+dataset/external/
+
+# Caches & large intermediates
+.cache/
+huggingface/
 *.parquet
-dataset/text/**/*
-dataset/images/**/*
-dataset/screenshots/**/*
-dataset/qr_codes/**/*
-dataset/pdfs/**/*
-dataset/processed/**/*
-dataset/external/**/*
-!dataset/**/
-!dataset/**/.gitkeep
-!dataset/labels.csv
-!dataset/metadata.csv
-!dataset/**/*.csv
-!dataset/README.md
-!dataset/annotations/*.json
 
 # Logs & profiling
 *.log
