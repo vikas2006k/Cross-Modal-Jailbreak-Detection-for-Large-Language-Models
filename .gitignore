@@ -1,0 +1,88 @@
+# Byte-compiled / optimized / ambient files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# PyTorch / Model checkpoints & weights (large binaries)
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+models/**/saved_model/*
+models/**/checkpoints/*
+!models/**/.gitkeep
+
+# Datasets / Large media files
+data/raw/*
+data/processed/*
+data/external/*
+!data/**/.gitkeep
+!data/labels.csv
+!data/metadata.csv
+
+# Logs & profiling
+*.log
+logs/
+wandb/
+runs/
+
+# Jupyter Notebooks checkpoint
+.ipynb_checkpoints
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.next/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# Reports binaries
+reports/*.pdf
