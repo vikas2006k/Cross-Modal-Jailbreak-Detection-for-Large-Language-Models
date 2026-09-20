@@ -20,6 +20,7 @@ import torch
 from backend.inference import TextInferenceEngine
 from vision_detector.inference import VisionJailbreakDetector
 from vision_detector.preprocessing import load_image
+from fusion_engine.config import FusionEngineConfig, DEFAULT_CONFIG
 from fusion_engine.fusion import compute_cross_modal_fusion
 from fusion_engine.schemas import CrossModalPredictResponse
 
@@ -32,8 +33,9 @@ class CrossModalFusionEngine:
 
     _instance: Optional["CrossModalFusionEngine"] = None
 
-    def __init__(self, device: Optional[str] = None):
+    def __init__(self, device: Optional[str] = None, config: Optional[FusionEngineConfig] = None):
         self.device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
+        self.config = config or DEFAULT_CONFIG
         print(f"[*] Initializing CrossModalFusionEngine on {self.device}...")
 
         # Initialize sub-engines
@@ -43,10 +45,12 @@ class CrossModalFusionEngine:
         print("[+] CrossModalFusionEngine successfully initialized.")
 
     @classmethod
-    def get_instance(cls, device: Optional[str] = None) -> "CrossModalFusionEngine":
+    def get_instance(cls, device: Optional[str] = None, config: Optional[FusionEngineConfig] = None) -> "CrossModalFusionEngine":
         """Singleton accessor."""
         if cls._instance is None:
-            cls._instance = cls(device=device)
+            cls._instance = cls(device=device, config=config)
+        elif config is not None:
+            cls._instance.config = config
         return cls._instance
 
     def predict(
@@ -134,7 +138,8 @@ class CrossModalFusionEngine:
             text_output=text_result,
             ocr_output=ocr_output,
             pil_image=pil_image,
-            user_prompt=user_text
+            user_prompt=user_text,
+            config=self.config
         )
 
         # 5. Optional Explainability Generation

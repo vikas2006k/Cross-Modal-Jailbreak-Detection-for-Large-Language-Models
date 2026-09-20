@@ -165,3 +165,22 @@ def test_disagreement_stealth_text_injection(engine, test_images_dir):
     response = engine.predict(image=test_images_dir["prompt_injection"])
     assert response.blocked is True
     assert response.prediction == "JAILBREAK"
+
+
+def test_adaptive_configuration():
+    """
+    Verifies that FusionEngineConfig hyperparameters are configurable and instantiate properly.
+    """
+    from fusion_engine.config import FusionEngineConfig, DEFAULT_CONFIG
+    custom_cfg = FusionEngineConfig(
+        vision_weight=0.40,
+        text_weight=0.60,
+        blank_entropy_threshold=1.80,
+        educational_vocab_threshold=0.35
+    )
+    assert custom_cfg.vision_weight == 0.40
+    assert custom_cfg.text_weight == 0.60
+    assert custom_cfg.blank_entropy_threshold == 1.80
+    assert "lecture notes" in DEFAULT_CONFIG.educational_vocabulary
+    assert "system override" in DEFAULT_CONFIG.adversarial_triggers
+

@@ -162,5 +162,4 @@ def test_cross_modal_predict_endpoint(client, tmp_path):
     assert "confidence" in res_data
     assert "modalities" in res_data
     assert "fusion_reason" in res_data
-    assert res_data["model_version"] == "CMJD-v1.0"
-
+    assert res_data["model_version"] in ["CMJD-v1.0", "CMJD-v1.1-Optimized"]

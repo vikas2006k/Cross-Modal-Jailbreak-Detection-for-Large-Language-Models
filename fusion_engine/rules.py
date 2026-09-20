@@ -34,7 +34,17 @@ PROMPT_INJECTION_PATTERNS = re.compile(
 )
 
 EDUCATIONAL_PATTERNS = re.compile(
-    r"\b(introduction to|chapter|lecture|slide|course|syllabus|cs\d+|computer science|algorithms?|data structures?|biology|chemistry|physics|mathematics|theorem|proof|exercise|summary|university|professor|homework|quiz)\b",
+    r"\b(introduction to|chapter|lecture|slide|course|syllabus|cs\d+|computer science|algorithms?|data structures?|biology|chemistry|physics|mathematics|thermodynamics|geology|astronomy|economics|theorem|proof|exercise|summary|university|professor|homework|quiz|foundational concepts)\b",
+    re.IGNORECASE
+)
+
+CODE_PATTERNS = re.compile(
+    r"(\b(def\s+\w+|import\s+\w+|from\s+\w+|class\s+\w+|return\s+|enumerate|np\.|plt\.|pd\.)\b|[{};]{2,})",
+    re.IGNORECASE
+)
+
+MEME_PATTERNS = re.compile(
+    r"(\[software engineering meme|\b(unit test|continuous integration|indentation|when the|celebration time)\b)",
     re.IGNORECASE
 )
 
@@ -46,10 +56,11 @@ def classify_attack_category(
     user_prompt: str,
     vision_risk: float,
     text_risk: float,
-    num_ocr_regions: int
+    num_ocr_regions: int,
+    is_blank: bool = False
 ) -> str:
     """
-    Classifies input into one of the 9 standardized CMJD attack/benign categories:
+    Classifies input into standardized CMJD attack/benign categories:
     - Prompt Injection
     - Roleplay Jailbreak
     - Indirect Jailbreak
@@ -58,12 +69,20 @@ def classify_attack_category(
     - Visual Prompt Injection
     - OCR Text Injection
     - Benign Educational Content
+    - Benign Code / Terminal Screenshot
+    - Benign Meme / Technical Humor
+    - Benign Blank / Canvas Image
     - Benign Natural Image
     """
     text_to_scan = f"{combined_text} {ocr_text} {user_prompt}".strip()
 
     if prediction == "SAFE":
-        # Check if educational slide / academic content
+        if is_blank:
+            return "Benign Blank / Canvas Image"
+        if CODE_PATTERNS.search(text_to_scan):
+            return "Benign Code / Terminal Screenshot"
+        if MEME_PATTERNS.search(text_to_scan):
+            return "Benign Meme / Technical Humor"
         if EDUCATIONAL_PATTERNS.search(text_to_scan) or (num_ocr_regions >= 2 and len(ocr_text) > 40):
             return "Benign Educational Content"
         return "Benign Natural Image"
@@ -82,12 +101,10 @@ def classify_attack_category(
         return "Multi-step Jailbreak"
 
     if PROMPT_INJECTION_PATTERNS.search(text_to_scan):
-        # If user prompt is empty or safe, but OCR text has injection, classify as OCR Text Injection
         if len(ocr_text.strip()) > 0 and len(user_prompt.strip()) == 0:
             return "OCR Text Injection"
         return "Prompt Injection"
 
-    # Distinguish OCR Text Injection vs Visual Prompt Injection
     if len(ocr_text.strip()) > 0 and num_ocr_regions > 0:
         return "OCR Text Injection"
 
@@ -107,7 +124,10 @@ def generate_fusion_reason(
     ocr_text: str,
     user_prompt: str,
     is_educational_corrected: bool = False,
-    is_blank_corrected: bool = False
+    is_blank_corrected: bool = False,
+    is_code_corrected: bool = False,
+    is_meme_corrected: bool = False,
+    is_doc_layout_corrected: bool = False
 ) -> str:
     """
     Generates human-understandable explanation detailing cross-modal decision
@@ -115,17 +135,36 @@ def generate_fusion_reason(
     """
     if is_educational_corrected:
         return (
-            "Cross-modal disagreement resolved: Vision model flagged typographic slide layout "
-            f"(Vision Risk: {vision_risk:.1f}%), but DistilBERT verified that extracted OCR text "
-            f"('{ocr_text[:60]}...') is purely benign academic/educational material "
-            f"(Text Risk: {text_risk:.1f}%). False positive overridden to SAFE."
+            "Educational semantic gating applied: Vision model flagged typographic slide layout "
+            f"(Vision Risk: {vision_risk:.1f}%), but academic/scientific terminology in OCR text "
+            f"('{ocr_text[:60]}...') contains zero adversarial markers. "
+            f"Typographic bias eliminated; final risk adjusted to {fused_risk:.1f}% (SAFE)."
+        )
+
+    if is_code_corrected:
+        return (
+            "Code syntax gating applied: Dark-mode IDE layout triggered visual risk "
+            f"(Vision Risk: {vision_risk:.1f}%), but OCR recognized benign programming syntax "
+            f"with no jailbreak directives. Verdict overridden to SAFE (Risk: {fused_risk:.1f}%)."
+        )
+
+    if is_meme_corrected:
+        return (
+            "Technical humor gating applied: Stylized card graphic triggered visual risk "
+            f"(Vision Risk: {vision_risk:.1f}%), but text analysis recognized benign software engineering "
+            f"humor without exploit intent. Verdict overridden to SAFE (Risk: {fused_risk:.1f}%)."
         )
 
     if is_blank_corrected:
         return (
-            f"Canvas artifact resolved: Vision model triggered on uniform canvas background "
-            f"(Vision Risk: {vision_risk:.1f}%), but no OCR text was detected and image contains "
-            "no adversarial content. Verdict overridden to SAFE."
+            f"Blank image normalization: Image exhibited low Shannon entropy with zero OCR text "
+            f"regions. Spurious visual risk ({vision_risk:.1f}%) suppressed to {fused_risk:.1f}% (SAFE)."
+        )
+
+    if is_doc_layout_corrected:
+        return (
+            f"Vision reliability gate: Document-like formatting (Vision Risk: {vision_risk:.1f}%) "
+            "discounted because extracted text contains verified benign content and no attack triggers."
         )
 
     if vision_pred == "JAILBREAK" and text_pred == "JAILBREAK":
