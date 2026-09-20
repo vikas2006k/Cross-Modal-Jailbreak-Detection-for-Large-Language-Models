@@ -1,0 +1,45 @@
+# ==============================================================================
+# Production Dockerfile for CMJD Backend (FastAPI + PyTorch + EasyOCR + CLIP)
+# ==============================================================================
+
+FROM python:3.10-slim AS base
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /app
+
+# Install essential system dependencies for OpenCV and EasyOCR
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libgl1 \
+    libglib2.0-0 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Pre-install dependencies with layer caching
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Pre-download and cache EasyOCR CRAFT models to avoid runtime network dependencies
+RUN python -c "import easyocr; easyocr.Reader(['en'])"
+
+# Copy application source code
+COPY backend/ ./backend/
+COPY fusion_engine/ ./fusion_engine/
+COPY vision_detector/ ./vision_detector/
+COPY models/ ./models/
+
+# Create a non-privileged user for security compliance
+RUN useradd -u 10001 appuser && chown -R appuser:appuser /app
+USER appuser
+
+EXPOSE 8001
+
+HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \
+    CMD curl -f http://127.0.0.1:8001/health || exit 1
+
+CMD ["python", "-m", "uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8001", "--workers", "2"]

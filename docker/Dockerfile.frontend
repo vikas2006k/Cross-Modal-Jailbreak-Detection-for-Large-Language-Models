@@ -1,0 +1,29 @@
+# ==============================================================================
+# Multi-stage Production Dockerfile for CMJD Frontend (React 19 + Vite + NGINX)
+# ==============================================================================
+
+# Stage 1: Build the production bundle
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Install dependencies using package-lock if available
+COPY frontend/package*.json ./
+RUN npm ci
+
+# Copy source code and build
+COPY frontend/ ./
+RUN npm run build
+
+# Stage 2: Serve using lightweight NGINX
+FROM nginx:alpine-slim
+
+# Copy custom NGINX configuration
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy compiled production assets from builder stage
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
