@@ -136,3 +136,31 @@ def test_inference_audit_logging(client):
     content = LOG_FILE_PATH.read_text(encoding="utf-8")
     assert "timestamp,prediction,confidence,risk_score" in content
     assert "Log verification test" in content
+
+
+def test_cross_modal_predict_endpoint(client, tmp_path):
+    """Verify that POST /cross-modal-predict evaluates uploaded image and returns fused verdict."""
+    from PIL import Image
+    import io
+
+    # Create a small in-memory test image
+    img = Image.new("RGB", (100, 100), color=(200, 220, 240))
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG")
+    buf.seek(0)
+
+    files = {"image": ("test.jpg", buf, "image/jpeg")}
+    data = {"prompt": "What is depicted in this educational diagram?"}
+
+    response = client.post("/cross-modal-predict", files=files, data=data)
+    assert response.status_code == 200
+    res_data = response.json()
+
+    assert "prediction" in res_data
+    assert res_data["prediction"] in ["SAFE", "JAILBREAK"]
+    assert "risk_score" in res_data
+    assert "confidence" in res_data
+    assert "modalities" in res_data
+    assert "fusion_reason" in res_data
+    assert res_data["model_version"] == "CMJD-v1.0"
+

@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-09-20T11:22:36Z",
+  "benchmark_samples": 80,
+  "evaluation_duration_seconds": 67.8,
+  "vision_only": {
+    "accuracy": 0.375,
+    "precision": 0.375,
+    "recall": 1.0,
+    "f1_score": 0.5455,
+    "roc_auc": 0.6727,
+    "fpr": 1.0,
+    "fnr": 0.0,
+    "confusion_matrix": {
+      "true_negative": 0,
+      "false_positive": 50,
+      "false_negative": 0,
+      "true_positive": 30
+    }
+  },
+  "text_only": {
+    "accuracy": 0.9,
+    "precision": 0.7895,
+    "recall": 1.0,
+    "f1_score": 0.8824,
+    "roc_auc": 0.995,
+    "fpr": 0.16,
+    "fnr": 0.0,
+    "confusion_matrix": {
+      "true_negative": 42,
+      "false_positive": 8,
+      "false_negative": 0,
+      "true_positive": 30
+    }
+  },
+  "cross_modal_fusion": {
+    "accuracy": 0.9,
+    "precision": 0.7895,
+    "recall": 1.0,
+    "f1_score": 0.8824,
+    "roc_auc": 0.9793,
+    "fpr": 0.16,
+    "fnr": 0.0,
+    "confusion_matrix": {
+      "true_negative": 42,
+      "false_positive": 8,
+      "false_negative": 0,
+      "true_positive": 30
+    }
+  }
+}

@@ -109,3 +109,11 @@ class ModelInfoResponse(BaseModel):
     training_accuracy: float = Field(..., examples=[0.992])
     roc_auc: float = Field(..., examples=[0.9996])
     checkpoint_path: str = Field(...)
+
+
+# Cross-modal schema re-export for API consumers
+try:
+    from fusion_engine.schemas import CrossModalPredictResponse
+except ImportError:
+    pass
+

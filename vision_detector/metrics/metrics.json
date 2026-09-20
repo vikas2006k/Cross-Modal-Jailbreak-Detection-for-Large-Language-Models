@@ -1,0 +1,18 @@
+{
+  "model_name": "CLIP-ViT-B/32 + MLP Classifier Head",
+  "backbone": "openai/clip-vit-base-patch32",
+  "dataset": "CMJD-Vision (2,000 images)",
+  "test_samples": 300,
+  "accuracy": 0.9967,
+  "precision": 0.9934,
+  "recall": 1.0,
+  "f1_score": 0.9967,
+  "roc_auc": 1.0,
+  "confusion_matrix": {
+    "true_negative": 149,
+    "false_positive": 1,
+    "false_negative": 0,
+    "true_positive": 150
+  },
+  "evaluation_timestamp": "2026-09-20T10:59:55Z"
+}

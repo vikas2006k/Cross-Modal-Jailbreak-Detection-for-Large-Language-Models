@@ -5,8 +5,8 @@ Provides endpoints for health checking, model metadata, single prompt, and batch
 
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
-from typing import Any
-from fastapi import FastAPI, HTTPException, Request, status
+from typing import Any, Optional
+from fastapi import FastAPI, HTTPException, Request, status, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -20,6 +20,9 @@ from backend.schemas import (
     HealthResponse,
     ModelInfoResponse
 )
+from fusion_engine.schemas import CrossModalPredictResponse
+from fusion_engine.inference import CrossModalFusionEngine
+
 
 
 @asynccontextmanager
@@ -29,9 +32,12 @@ async def lifespan(app: FastAPI):
     """
     print("[*] FastAPI application starting up: Initializing DistilBERT inference engine...")
     app.state.engine = TextInferenceEngine.get_instance()
+    print("[*] Initializing Cross-Modal Fusion engine...")
+    app.state.fusion_engine = CrossModalFusionEngine.get_instance()
     yield
     print("[*] FastAPI application shutting down: Cleaning up resources.")
     app.state.engine = None
+    app.state.fusion_engine = None
 
 
 app = FastAPI(
@@ -144,3 +150,47 @@ async def batch_predict(payload: BatchPredictRequest, request: Request) -> Batch
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Batch inference execution failed: {str(e)}"
         )
+
+
+@app.post(
+    "/cross-modal-predict",
+    response_model=CrossModalPredictResponse,
+    tags=["Multimodal Inference"],
+    summary="Evaluate image and optional text prompt for cross-modal jailbreak"
+)
+async def cross_modal_predict(
+    image: UploadFile = File(..., description="Image file to analyze (PNG, JPG, JPEG, WEBP)"),
+    prompt: Optional[str] = Form(None, description="Optional accompanying user text prompt"),
+    generate_explanations: bool = Form(False, description="Whether to generate 300 DPI explainability figures"),
+    request: Request = None
+) -> CrossModalPredictResponse:
+    """
+    Executes unified cross-modal jailbreak risk prediction.
+    Extracts embedded OCR text, computes CLIP vision risk, evaluates DistilBERT text risk,
+    and applies cross-modal fusion with explainability attribution.
+    """
+    fusion_engine: CrossModalFusionEngine = getattr(request.app.state, "fusion_engine", None)
+    if fusion_engine is None:
+        fusion_engine = CrossModalFusionEngine.get_instance()
+
+    try:
+        contents = await image.read()
+        if not contents:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Uploaded image file is empty."
+            )
+
+        return fusion_engine.predict(
+            image=contents,
+            user_prompt=prompt,
+            generate_explanations=generate_explanations
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Cross-modal inference failed: {str(e)}"
+        )
+
