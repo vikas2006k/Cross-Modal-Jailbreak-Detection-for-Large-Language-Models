@@ -1,0 +1,14 @@
+{
+  "total_samples": 10000,
+  "train_samples": 7000,
+  "validation_samples": 1500,
+  "test_samples": 1500,
+  "safe_samples": 5000,
+  "jailbreak_samples": 5000,
+  "max_length": 128,
+  "average_tokens": 26.34,
+  "max_tokens": 195,
+  "truncated_samples": 7,
+  "tokenizer": "distilbert-base-uncased",
+  "seed": 42
+}
